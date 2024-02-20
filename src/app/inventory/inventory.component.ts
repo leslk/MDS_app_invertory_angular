@@ -58,6 +58,38 @@ export class InventoryComponent {
     document.body.removeChild(a);
   }
 
+  printData() {
+    let printContents = '<table><tr><th>Désignation</th><th>Quantité</th><th>Unité</th></tr>';
+    this.entries.forEach(entry => {
+      printContents += `<tr><td>${entry.title}</td><td>${entry.total}</td><td>${entry.unit}</td></tr>`;
+    });
+    printContents += '</table>';
+    
+    const newWindow = window.open('', 'width=600,height=600');
+    if (newWindow) {
+      newWindow.document.open();
+      newWindow.document.write(`
+        <html>
+          <head>
+            <title>Inventaire</title>
+            <style>
+              table {
+                width: 100%;
+                border-collapse: collapse;
+              }
+              th, td {
+                border: 1px solid silver;
+                text-align: left;
+              }
+            </style>
+          </head>
+        <body onload="window.print();window.close()">${printContents}</body>
+        </html>`
+      );
+      newWindow.document.close();
+    }
+  }
+
   protected _setSelectedInventory(entry: Entry) {
     this.setSelectedInventory.emit();
     this.entryService.setSelectedInventory(entry);

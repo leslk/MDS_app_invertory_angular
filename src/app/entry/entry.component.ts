@@ -13,35 +13,51 @@ import { EntryService } from '../../entry.service';
 })
 
 export class EntryComponent {
-  @Input() entries: Entry[] = [];
+  entries: Entry[] = [];
   entryService = inject(EntryService);
-  id: number = 0;
   entry: Entry = {
-    id: this.id,
+    id: 0,
     title: null,
     total: null,
     unit: "m2",
     calculationString: "",
-  }
+  };
   errorTitle: string | null = null;
   errorTotal: string | null = null;
   keyPads = ["(", ")", "AC", "+", 7, 8, 9, "x", 4, 5, 6, "-", 1, 2, 3, "/", 0, ".", "="];
   units = ["m2", "m3", "u", "l"];
+  regexSymbols = /[+\-x/\.]/;
+  regexDecimalNumbers = /^.*(\d\.\d)$/;
 
   updateCalculations(key: string | number) {
     if (key === "=") {
-      if (this.entry.calculationString.includes('x')) {
-        this.entry.calculationString = this.entry.calculationString.replace('x', '*');
+      if (this.lastCharIsSymbol()) {
+        this.entry.calculationString = this.entry.calculationString.slice(0, -1);
       }
-      this.entry.total = eval(this.entry.calculationString);
-      console.log(this.entry);
+      this.entry.total = eval(this.entry.calculationString.replace('x', '*')).toFixed(2);
     } else if (key === "AC") {
       this.entry.calculationString = "";
       this.entry.total = 0;
     }
     else {
+      if (this.regexDecimalNumbers.test(this.entry.calculationString) && key === ".") {
+        return;
+      }
+
+      if ((this.inputIsSymbol(key) && this.lastCharIsSymbol())) {
+          this.entry.calculationString = this.entry.calculationString.slice(0, -1);
+      }
       this.entry.calculationString = this.entry.calculationString + key;
     }
+  }
+
+  inputIsSymbol(key: string | number) {
+    return this.regexSymbols.test(key.toString());
+  }
+
+  lastCharIsSymbol() {
+    const lastChar = this.entry.calculationString[this.entry.calculationString.length - 1];
+    return this.regexSymbols.test(lastChar);
   }
 
   resetErrors() {
@@ -51,7 +67,7 @@ export class EntryComponent {
 
   resetEntry() {
     this.entry = {
-      id: this.id,
+      id: 0,
       title: null,
       total: null,
       unit: "m2",
@@ -70,12 +86,14 @@ export class EntryComponent {
     if (this.errorTitle || this.errorTotal) {
       return;
     }
-      if (this.entries.filter((entry: Entry) => this.entry.id === entry.id).length > 0) {
-        const index = this.entries.findIndex((entry: Entry) => entry.id === this.entry.id);
-        this.entries.splice(index, 1);
-      }
-    this.entries.push(this.entry);
-    this.id++;
+    const entryIndex = this.entries.findIndex((entry: Entry) => entry.id === this.entry.id);
+    if (entryIndex !== -1) {
+      this.entries[entryIndex] = this.entry;
+    }
+    else {
+      this.entry.id = this.entries.length + 1;
+      this.entries.push(this.entry);
+    }
     this.entryService.setStoredEntries(this.entries);
     this.entryService.removeSelectedInventory();
     this.resetEntry();
@@ -83,18 +101,16 @@ export class EntryComponent {
   }
 
   ngOnInit() {
+    this.entries = this.entryService.getStoredEntries();
     this.entryService.selectedInventory$.subscribe((entry: Entry | null) => {
       if (entry) {
         this.entry = entry;
+      } else {
+        
       }
     });
     this.entryService.entries$.subscribe((entries: Entry[]) => {
-      if (entries.length > 0) {
         this.entries = entries;
-      } else {
-        this.entries = this.entryService.getStoredEntries();
-      }
     });  
   }
-
 }
