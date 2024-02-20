@@ -20,6 +20,9 @@
         grid-template-columns: repeat(3, 1fr);
         gap: 10px;
         padding: 10px 0;
+        button {
+            background-color: #5E6472;
+        }
     }
     &-card {
         height: 50px;
@@ -37,6 +40,10 @@
         }
     }
     &-title {
+        max-width: 60%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
         font-weight: bolder;
     }
     &-total {

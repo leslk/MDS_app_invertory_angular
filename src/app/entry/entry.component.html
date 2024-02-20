@@ -1,6 +1,9 @@
 <div class="entry">
     <div class="entry-input-container">
         <input class="entry-input" type="text" [(ngModel)]="entry.title" placeholder="Title">
+        @if (errorTitle) {
+            <div class="entry-error">{{errorTitle}}</div>
+        }
         <div class="entry-input">{{entry.calculationString}}</div>
         <div class="entry-result">
             <div class="entry-input__result">{{entry.total}}</div>
@@ -10,10 +13,13 @@
                 }
             </select>
         </div>
+        @if (errorTotal) {
+            <div class="entry-error">{{errorTotal}}</div>
+        }
     </div>
     <div class="entry-keypads">
         @for (key of keyPads; track $index) {
-            <button class="entry-button" (click)="updateCalculations(key)">{{ key }}</button>
+            <button [class]="key === 'AC' ? 'cancel-button' : 'entry-button'" (click)="updateCalculations(key)">{{ key }}</button>
         }
         <button (click)="addEntry()"><i class="fa-solid fa-arrow-right"></i></button>
         

@@ -18,11 +18,13 @@ export class EntryComponent {
   id: number = 0;
   entry: Entry = {
     id: this.id,
-    title: "",
-    total: 0,
+    title: null,
+    total: null,
     unit: "m2",
     calculationString: "",
   }
+  errorTitle: string | null = null;
+  errorTotal: string | null = null;
   keyPads = ["(", ")", "AC", "+", 7, 8, 9, "x", 4, 5, 6, "-", 1, 2, 3, "/", 0, ".", "="];
   units = ["m2", "m3", "u", "l"];
 
@@ -42,7 +44,32 @@ export class EntryComponent {
     }
   }
 
+  resetErrors() {
+    this.errorTitle = null;
+    this.errorTotal = null;
+  }
+
+  resetEntry() {
+    this.entry = {
+      id: this.id,
+      title: null,
+      total: null,
+      unit: "m2",
+      calculationString: ""
+    }
+  }
+
   addEntry() {
+    this.resetErrors();
+    if (!this.entry.title) {
+      this.errorTitle = "Un titre est requis";
+    }
+    if (!this.entry.total) {
+      this.errorTotal = "Un total est requis";
+    }
+    if (this.errorTitle || this.errorTotal) {
+      return;
+    }
       if (this.entries.filter((entry: Entry) => this.entry.id === entry.id).length > 0) {
         const index = this.entries.findIndex((entry: Entry) => entry.id === this.entry.id);
         this.entries.splice(index, 1);
@@ -51,13 +78,8 @@ export class EntryComponent {
     this.id++;
     this.entryService.setStoredEntries(this.entries);
     this.entryService.removeSelectedInventory();
-    this.entry = {
-      id: this.id,
-      title: "",
-      total: 0,
-      unit: "m2",
-      calculationString: ""
-    }
+    this.resetEntry();
+    this.resetErrors();
   }
 
   ngOnInit() {
