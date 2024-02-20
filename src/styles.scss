@@ -9,19 +9,25 @@ app-root {
     display: flex;
     flex-direction: column;
     height: 100vh;
+    max-height: 100vh;
+    margin: 10px;
 
+}
+
+app-entry , app-inventory {
+    display: flex;
+    flex-direction: column;
 }
 
 app-entry {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    margin-top: auto;
+    margin-bottom: auto;
 }
 
 body {
+    height: 100vh;
+    max-height: 100vh;
     font-family: 'Roboto', sans-serif;
-    margin: 10px;
 }
 
 button {

@@ -1,10 +1,10 @@
 <div class="entry">
     <div class="entry-input-container">
-        <input class="entry-input" type="text" (ngModel)="title" placeholder="Title">
-        <input class="entry-input" type="text" (ngModel)="calculation" placeholder="Content">
+        <input class="entry-input" type="text" [(ngModel)]="entry.title" placeholder="Title">
+        <div class="entry-input">{{entry.calculationString}}</div>
         <div class="entry-result">
-            <div class="entry-input__result"></div>
-            <select class="entry-input">
+            <div class="entry-input__result">{{entry.totalCalculation}}</div>
+            <select class="entry-input" (ngModel)="entry.unit">
                 @for (unit of units; track $index) {
                     <option value="{{unit}}">{{unit}}</option>
                 }
@@ -13,9 +13,9 @@
     </div>
     <div class="entry-keypads">
         @for (key of keyPads; track $index) {
-            <button class="entry-button">{{ key }}</button>
+            <button class="entry-button" (click)="updateCalculations(key)">{{ key }}</button>
         }
-        <button><i class="fa-solid fa-arrow-right"></i></button>
+        <button (click)="addEntry()"><i class="fa-solid fa-arrow-right"></i></button>
         
     </div>
 </div>

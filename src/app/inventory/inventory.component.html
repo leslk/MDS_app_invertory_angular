@@ -1,1 +1,20 @@
-<p>inventory works!</p>
+<div class="inventory">
+    <div class="inventory-cards">
+        @for (entry of entries; track $index) {
+            <div class="inventory-card" (click)="_setSelectedInventory(entry)">
+                <div class="inventory-card-content">
+                    <div class="inventory-title">{{entry.title}}</div>
+                    <div class="inventory-total">
+                        <div class="inventory-total-count">{{entry.totalCalculation}}</div>
+                        <div class="inventory-total-unit">{{entry.unit}}</div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="inventory-actions">
+       <button (click)="uploader.click()"><input hidden type="file" #uploader/>Importer un csv</button>
+       <button>Imprimer</button>
+       <button>Enregistrer en csv</button>
+    </div>
+</div>

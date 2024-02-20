@@ -19,7 +19,7 @@ import { InventoryComponent } from './inventory/inventory.component';
         <app-entry></app-entry>
       }
       @else {
-        <app-inventory></app-inventory>
+        <app-inventory (setSelectedInventory)="setTypeOfView('entry')"></app-inventory>
       }
     
   `,
