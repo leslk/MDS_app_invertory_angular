@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { EntryComponent } from './entry/entry.component';
@@ -9,27 +9,56 @@ import { InventoryComponent } from './inventory/inventory.component';
   standalone: true,
   imports: [CommonModule, RouterOutlet, EntryComponent, InventoryComponent],
   template: `
-    <header>
-      <nav>
-        <button class="header-button"><a routerLink="/entry" routerLinkActive="active" (click)="setTypeOfView('entry')">Saisie</a></button>
-        <button class="header-button"><a routerLink="/inventory" routerLinkActive="active" (click)="setTypeOfView('inventory')" >Inventaire</a></button>
-      </nav>
-    </header>
+    @if (!isTabletDevice) {
+      <header>
+        <nav>
+          <button class="header-button" (click)="setTypeOfView('entry')">Saisie</button>
+          <button class="header-button" (click)="setTypeOfView('inventory')">Inventaire</button>
+        </nav>
+      </header>
       @if (typeOfView === "entry") {
         <app-entry></app-entry>
       }
       @else {
         <app-inventory (setSelectedInventory)="setTypeOfView('entry')"></app-inventory>
       }
-    
+    }
+    @else {
+      <div class="tablet-view">
+        <app-entry></app-entry>
+        <app-inventory></app-inventory>
+      </div> 
+    }
   `,
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
+  constructor() {
+    this.checkScreenSize(window.innerWidth);
+  }
   title = 'app_inventory';
   typeOfView = "entry";
+  isTabletDevice = false;
 
   setTypeOfView(type: string) {
     this.typeOfView = type;
   }
+
+  checkScreenSize(width: number) {
+    if (width >= 768) {
+      this.isTabletDevice = true;
+    }
+    else {
+      this.isTabletDevice = false;
+    }
+  }
+
+  @HostListener('window:resize', ['$event']) 
+    onResize(event: any) {
+      this.checkScreenSize(event.target.innerWidth);
+    }
+  
+    ngAfterViewInit() {
+      this.checkScreenSize(window.innerWidth);
+    }
 }

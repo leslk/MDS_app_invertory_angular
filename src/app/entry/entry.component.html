@@ -3,8 +3,8 @@
         <input class="entry-input" type="text" [(ngModel)]="entry.title" placeholder="Title">
         <div class="entry-input">{{entry.calculationString}}</div>
         <div class="entry-result">
-            <div class="entry-input__result">{{entry.totalCalculation}}</div>
-            <select class="entry-input" (ngModel)="entry.unit">
+            <div class="entry-input__result">{{entry.total}}</div>
+            <select class="entry-input" [(ngModel)]="entry.unit">
                 @for (unit of units; track $index) {
                     <option value="{{unit}}">{{unit}}</option>
                 }

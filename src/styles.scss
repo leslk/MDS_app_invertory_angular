@@ -11,12 +11,14 @@ app-root {
     height: 100vh;
     max-height: 100vh;
     margin: 10px;
+    justify-content: space-between;
 
 }
 
 app-entry , app-inventory {
     display: flex;
     flex-direction: column;
+    flex-grow: 1;
 }
 
 app-entry {

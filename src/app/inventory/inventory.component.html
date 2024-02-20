@@ -5,7 +5,7 @@
                 <div class="inventory-card-content">
                     <div class="inventory-title">{{entry.title}}</div>
                     <div class="inventory-total">
-                        <div class="inventory-total-count">{{entry.totalCalculation}}</div>
+                        <div class="inventory-total-count">{{entry.total}}</div>
                         <div class="inventory-total-unit">{{entry.unit}}</div>
                     </div>
                 </div>
@@ -13,8 +13,8 @@
         }
     </div>
     <div class="inventory-actions">
-       <button (click)="uploader.click()"><input hidden type="file" #uploader/>Importer un csv</button>
+       <button (click)="uploader.click()"><input hidden type="file" #uploader (change)="onFileChange($event)"/>Importer un csv</button>
        <button>Imprimer</button>
-       <button>Enregistrer en csv</button>
+       <button (click)="createCSVString()">Enregistrer en csv</button>
     </div>
 </div>

@@ -9,7 +9,7 @@
         display: flex;
         margin: 10px 0;
         flex-direction: column;
-        gap: 10px;
+        gap: 15px;
         overflow-y: auto;
     }
     &-actions {
@@ -22,12 +22,14 @@
         padding: 10px 0;
     }
     &-card {
-        padding: 20px;
+        height: 50px;
         border: 1px solid #ccc;
-        border-radius: 5px;
+        border-radius: 10px;
+        padding: 0 10px;
         box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
         transition: box-shadow 0.3s;
         &-content {
+            height: 100%;
             display: flex;
             gap: 10px;
             align-items: center;
@@ -42,5 +44,15 @@
         justify-content: space-between;
         align-items: center;
         gap: 2px;
+    }
+
+    @media screen and (min-width: 768px) {
+        &-actions {
+            padding: 0;
+        }
+        &-cards {
+            margin-top: 0;
+        }
+        
     }
 }

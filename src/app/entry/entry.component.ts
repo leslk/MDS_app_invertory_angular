@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Entry } from '../../interfaces/entry_interface'
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { EntryService } from '../../entry.service';
 
 @Component({
   selector: 'app-entry',
@@ -12,11 +13,12 @@ import { FormsModule } from '@angular/forms';
 })
 
 export class EntryComponent {
+  entryService = inject(EntryService);
   id: number = 0;
   entry: Entry = {
     id: this.id,
     title: "",
-    totalCalculation: 0,
+    total: 0,
     unit: "m2",
     calculationString: ""
   }
@@ -29,9 +31,10 @@ export class EntryComponent {
       if (this.entry.calculationString.includes('x')) {
         this.entry.calculationString = this.entry.calculationString.replace('x', '*');
       }
-      this.entry.totalCalculation= eval(this.entry.calculationString);
+      this.entry.total = eval(this.entry.calculationString);
     } else if (key === "AC") {
       this.entry.calculationString = "";
+      this.entry.total = 0;
     }
     else {
       this.entry.calculationString = this.entry.calculationString + key;
@@ -39,36 +42,32 @@ export class EntryComponent {
   }
 
   addEntry() {
-    const storedEntries = localStorage.getItem('Entries');
-    const selectedInventory = localStorage.getItem('selectedInventory');
-    if (storedEntries && selectedInventory) {
-      let parsedSelectedInventory = JSON.parse(selectedInventory);
-      let parsedEntries = JSON.parse(storedEntries);
-      if (parsedEntries.filter((entry: Entry) => parsedSelectedInventory.id === entry.id).length > 0) {
-        const index = this.entries.findIndex((entry: Entry) => entry.id === parsedSelectedInventory.id);
+    const storedEntries = this.entryService.getStoredEntries();
+    const selectedInventory = this.entryService.getSelectedInventory();
+    if (storedEntries.length > 0  && selectedInventory) {
+      if (storedEntries.filter((entry: Entry) => selectedInventory.id === entry.id).length > 0) {
+        const index = this.entries.findIndex((entry: Entry) => entry.id === selectedInventory.id);
         this.entries.splice(index, 1);
       }
-      this.entries.push(this.entry);
-      this.id++;
-      localStorage.setItem('Entries', JSON.stringify(this.entries));
-      this.entry = {
-        id: this.id,
-        title: "",
-        totalCalculation: 0,
-        unit: "m2",
-        calculationString: ""
-      }
+    }
+    this.entries.push(this.entry);
+    this.id++;
+    this.entryService.setStoredEntries(this.entries);
+    this.entryService.removeSelectedInventory();
+    this.entry = {
+      id: this.id,
+      title: "",
+      total: 0,
+      unit: "m2",
+      calculationString: ""
     }
   }
 
   ngOnInit() {
-    let entries = localStorage.getItem('Entries');
-    if (entries) {
-      this.entries = JSON.parse(entries);
-    }
-    let selectedInventory = localStorage.getItem('selectedInventory');
+    this.entries = this.entryService.getStoredEntries();
+     const selectedInventory = this.entryService.getSelectedInventory();
     if (selectedInventory) {
-      this.entry = JSON.parse(selectedInventory);
+      this.entry = selectedInventory;
     }
   }
 
