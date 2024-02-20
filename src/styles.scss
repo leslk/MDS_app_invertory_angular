@@ -1,1 +1,35 @@
 /* You can add global styles to this file, and also import other style files */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+app-root {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+
+}
+
+app-entry {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 10px;
+}
+
+button {
+    padding: 10px 5px;
+    border-radius: 10px;
+    outline: none;
+    border: none;
+    background: #7A9E9F;
+    color: white;
+    height: 50px
+}

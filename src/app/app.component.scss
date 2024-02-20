@@ -1,0 +1,9 @@
+header {
+    width: 100%;
+}
+
+nav {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}

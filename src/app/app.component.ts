@@ -11,9 +11,10 @@ import { InventoryComponent } from './inventory/inventory.component';
   template: `
     <header>
       <nav>
-        <button><a routerLink="/entry" routerLinkActive="active" (click)="setTypeOfView('entry')">Saisie</a></button>
-        <button><a routerLink="/inventory" routerLinkActive="active" (click)="setTypeOfView('inventory')" >Inventaire</a></button>
+        <button class="header-button"><a routerLink="/entry" routerLinkActive="active" (click)="setTypeOfView('entry')">Saisie</a></button>
+        <button class="header-button"><a routerLink="/inventory" routerLinkActive="active" (click)="setTypeOfView('inventory')" >Inventaire</a></button>
       </nav>
+    </header>
       @if (typeOfView === "entry") {
         <app-entry></app-entry>
       }
