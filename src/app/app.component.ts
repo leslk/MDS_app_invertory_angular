@@ -13,7 +13,7 @@ import { InventoryComponent } from './inventory/inventory.component';
     @if (!isTabletDevice) {
       <header>
         <nav>
-          <button class="header-button" (click)="setTypeOfView('entry')">Saisie</button>
+          <button class="header-button" (click)="setEntryView()">Saisie</button>
           <button class="header-button" (click)="setTypeOfView('inventory')">Inventaire</button>
         </nav>
       </header>
@@ -44,6 +44,11 @@ export class AppComponent {
 
   setTypeOfView(type: string) {
     this.typeOfView = type;
+  }
+
+  setEntryView() {
+    this.typeOfView = "entry";
+    this.entryService.removeSelectedInventory();
   }
 
   getEntries() {

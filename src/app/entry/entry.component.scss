@@ -1,4 +1,8 @@
 .entry {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    height: 100%;
     &-button {
         background-color: #5E6472;
         font-weight: bold;
@@ -9,9 +13,6 @@
     &-error {
         color: red;
     }
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
     &-input {
         width: 100%;
         padding: 10px;

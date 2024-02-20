@@ -106,7 +106,7 @@ export class EntryComponent {
       if (entry) {
         this.entry = entry;
       } else {
-        
+        this.resetEntry();
       }
     });
     this.entryService.entries$.subscribe((entries: Entry[]) => {
