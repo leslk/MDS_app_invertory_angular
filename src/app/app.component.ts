@@ -1,7 +1,8 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, inject, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { EntryComponent } from './entry/entry.component';
+import { EntryService } from '../entry.service';
 import { InventoryComponent } from './inventory/inventory.component';
 
 @Component({
@@ -36,12 +37,21 @@ export class AppComponent {
   constructor() {
     this.checkScreenSize(window.innerWidth);
   }
+  entryService = inject(EntryService);
   title = 'app_inventory';
   typeOfView = "entry";
   isTabletDevice = false;
 
   setTypeOfView(type: string) {
     this.typeOfView = type;
+  }
+
+  getEntries() {
+    return this.entryService.getStoredEntries();
+  }
+
+  getSelectedInventory() {
+    return this.entryService.getSelectedInventory();
   }
 
   checkScreenSize(width: number) {

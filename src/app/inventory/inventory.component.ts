@@ -14,13 +14,6 @@ export class InventoryComponent {
   entries: Entry[] = [];
   @Output() setSelectedInventory = new EventEmitter();
 
-  getStoredEntries() {
-    let storedEntries = localStorage.getItem('Entries');
-    if (storedEntries) {
-      this.entries = JSON.parse(storedEntries);
-    }
-  }
-
 
   onFileChange(event: any) {
     const files = event.target.files;
@@ -52,9 +45,9 @@ export class InventoryComponent {
 
   }
   createCSVString() {
-    let csvData = "title,total,unit";
+    let csvData = "id,title,total,unit";
     this.entries.forEach((entry: Entry) => {
-      csvData += "\n" + entry.title + "," + entry.total + "," + entry.unit;
+      csvData += "\n" + entry.id + "," + entry.title + "," + entry.total + "," + entry.unit;
     });
     const encodeURi = encodeURI(csvData);
     const a = document.createElement('a');
@@ -71,7 +64,13 @@ export class InventoryComponent {
   }
 
   ngOnInit() {
-    this.getStoredEntries();
+    this.entryService.entries$.subscribe((entries: Entry[]) => {
+      if (entries.length > 0) {
+        this.entries = entries;     
+      } else {
+        this.entries = this.entryService.getStoredEntries();
+      }
+    });
   }
 
 }

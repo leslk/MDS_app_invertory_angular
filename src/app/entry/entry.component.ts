@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { Entry } from '../../interfaces/entry_interface'
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -13,6 +13,7 @@ import { EntryService } from '../../entry.service';
 })
 
 export class EntryComponent {
+  @Input() entries: Entry[] = [];
   entryService = inject(EntryService);
   id: number = 0;
   entry: Entry = {
@@ -20,11 +21,10 @@ export class EntryComponent {
     title: "",
     total: 0,
     unit: "m2",
-    calculationString: ""
+    calculationString: "",
   }
   keyPads = ["(", ")", "AC", "+", 7, 8, 9, "x", 4, 5, 6, "-", 1, 2, 3, "/", 0, ".", "="];
   units = ["m2", "m3", "u", "l"];
-  entries: Entry[] = [];
 
   updateCalculations(key: string | number) {
     if (key === "=") {
@@ -32,6 +32,7 @@ export class EntryComponent {
         this.entry.calculationString = this.entry.calculationString.replace('x', '*');
       }
       this.entry.total = eval(this.entry.calculationString);
+      console.log(this.entry);
     } else if (key === "AC") {
       this.entry.calculationString = "";
       this.entry.total = 0;
@@ -42,14 +43,10 @@ export class EntryComponent {
   }
 
   addEntry() {
-    const storedEntries = this.entryService.getStoredEntries();
-    const selectedInventory = this.entryService.getSelectedInventory();
-    if (storedEntries.length > 0  && selectedInventory) {
-      if (storedEntries.filter((entry: Entry) => selectedInventory.id === entry.id).length > 0) {
-        const index = this.entries.findIndex((entry: Entry) => entry.id === selectedInventory.id);
+      if (this.entries.filter((entry: Entry) => this.entry.id === entry.id).length > 0) {
+        const index = this.entries.findIndex((entry: Entry) => entry.id === this.entry.id);
         this.entries.splice(index, 1);
       }
-    }
     this.entries.push(this.entry);
     this.id++;
     this.entryService.setStoredEntries(this.entries);
@@ -64,11 +61,18 @@ export class EntryComponent {
   }
 
   ngOnInit() {
-    this.entries = this.entryService.getStoredEntries();
-     const selectedInventory = this.entryService.getSelectedInventory();
-    if (selectedInventory) {
-      this.entry = selectedInventory;
-    }
+    this.entryService.selectedInventory$.subscribe((entry: Entry | null) => {
+      if (entry) {
+        this.entry = entry;
+      }
+    });
+    this.entryService.entries$.subscribe((entries: Entry[]) => {
+      if (entries.length > 0) {
+        this.entries = entries;
+      } else {
+        this.entries = this.entryService.getStoredEntries();
+      }
+    });  
   }
 
 }
